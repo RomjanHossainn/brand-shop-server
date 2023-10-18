@@ -13,7 +13,7 @@ app.get('/',(req,res) => {
 
 
     
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri =
   "mongodb+srv://FashionApparelProject:IPMQpXovKh7ZnUlS@cluster0.m61flku.mongodb.net/?retryWrites=true&w=majority";
 
@@ -30,17 +30,49 @@ async function run() {
   try {
     await client.connect();
 
-    // prodcuts part
+    // category get // prodcuts part
+
 
     const productsDataBase = client.db('ProductsDB').collection('products');
+    const categoryesDatabase = client.db('ProductsDB').collection('categoryes')
 
+    app.get('/categoryes',async(req,res) => {
+      const result = await categoryesDatabase.find().toArray();
+      res.send(result);
+    })
+
+    
     app.get("/products/:name", async (req, res) => {
       const name = req.params.name;
-      const result = await productsDataBase.find().toArray();
-      const filterBrand = result.filter(brand => brand.brand_name === name)
-      res.send(filterBrand)
-
+      const query = { brand_name: name };
+      const result = await productsDataBase.find(query).toArray();
+      res.send(result);
     });
+
+    app.get('/product/:id',async(req,res) => {
+      const id = req.params.id;
+      const query = {_id:new ObjectId(id)}
+      const result = await productsDataBase.findOne(query);
+      res.send(result);
+    })
+
+
+    app.post('/products',async(req,res) => {
+      const addProducts = req.body;
+      const imageurl = addProducts.image;
+      const checkMultiple = {image : imageurl}
+      const finedData = await productsDataBase.findOne(checkMultiple);
+      if(!finedData){
+        const result = await productsDataBase.insertOne(addProducts);
+        res.send(result);
+      }else{
+        res.send({
+          alreadyAddeded : true
+        })
+      }
+    })
+
+
 
     await client.db("admin").command({ ping: 1 });
     console.log(
