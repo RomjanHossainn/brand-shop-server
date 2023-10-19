@@ -6,7 +6,6 @@ const cors = require('cors');
 app.use(cors())
 app.use(express.json())
 
-
 app.get('/',(req,res) => {
     res.send('server home route running')
 })
@@ -56,6 +55,9 @@ async function run() {
       res.send(result);
     })
 
+    
+  
+
 
     app.post('/products',async(req,res) => {
       const addProducts = req.body;
@@ -70,6 +72,28 @@ async function run() {
           alreadyAddeded : true
         })
       }
+    })
+
+    app.put('/updateProduct/:id',async(req,res) => {
+      const id = req.params.id;
+      const data = req.body;
+
+      const filter = {_id : new ObjectId(id)}
+
+      const updateData = {
+        $set: {
+          name: data.updateName,
+          brand_name: data.update_brand_name,
+          type: data.updateType,
+          price: data.updatePrice,
+          rating: data.updateRating,
+          image: data.updateImage,
+          short_description: data.updateShortDescription,
+        },
+      };
+      const result = await productsDataBase.updateOne(filter,updateData);
+      res.send(result);
+
     })
 
 
