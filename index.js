@@ -101,8 +101,12 @@ async function run() {
 
     app.post('/addtocartproduct',async(req,res) => {
         const product = req.body;
-        const result = await addToProductDataBase.insertOne(product);
-        res.send(result)
+        
+          const result = await addToProductDataBase.insertOne(product);
+          res.send(result);
+        
+        
+        
     })
 
     app.get("/addtocartproduct/:email",async(req,res) => {
@@ -110,6 +114,7 @@ async function run() {
       const qurey = {userEmail : email}
       const result = await addToProductDataBase.find(qurey).toArray();
       res.send(result);
+      
     });
 
 
