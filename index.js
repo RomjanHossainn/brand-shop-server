@@ -33,7 +33,9 @@ async function run() {
 
 
     const productsDataBase = client.db('ProductsDB').collection('products');
-    const categoryesDatabase = client.db('ProductsDB').collection('categoryes')
+    const categoryesDatabase = client.db('ProductsDB').collection('categoryes');
+
+    const addToProductDataBase = client.db("ProductsDB").collection('addToCart');
 
     app.get('/categoryes',async(req,res) => {
       const result = await categoryesDatabase.find().toArray();
@@ -96,6 +98,27 @@ async function run() {
 
     })
 
+
+    app.post('/addtocartproduct',async(req,res) => {
+        const product = req.body;
+        const result = await addToProductDataBase.insertOne(product);
+        res.send(result)
+    })
+
+    app.get("/addtocartproduct/:email",async(req,res) => {
+      const email = req.params.email;
+      const qurey = {userEmail : email}
+      const result = await addToProductDataBase.find(qurey).toArray();
+      res.send(result);
+    });
+
+
+    app.delete("/deleteproduct/:id",async (req,res) =>{
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)}
+      const result = await addToProductDataBase.deleteOne(query);
+      res.send(result);
+    });
 
 
     await client.db("admin").command({ ping: 1 });
