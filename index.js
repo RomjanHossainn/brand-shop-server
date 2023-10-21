@@ -98,6 +98,9 @@ async function run() {
 
     })
 
+    
+    
+
 
     app.post('/addtocartproduct',async(req,res) => {
         const product = req.body;
@@ -125,6 +128,7 @@ async function run() {
       res.send(result);
     });
 
+    
 
     await client.db("admin").command({ ping: 1 });
     console.log(
