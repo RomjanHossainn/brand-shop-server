@@ -1,0 +1,1 @@
+*It is basically an eCommerce application *User can add their various products here May update or delete their products *Here are some products of different brands He can upload his products according to this brand *If a user wants to do all these tasks However, he must be logged in to our website
